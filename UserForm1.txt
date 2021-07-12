@@ -1,0 +1,445 @@
+
+Private Sub CommandButton1_Click()
+    Dim ast As Worksheet, i As Byte
+    Set ast = Worksheets("Očištěná_data")
+    
+    If TextBox1.Value = "" Or _
+        TextBox2.Value = "" Or _
+        TextBox3.Value = "" Or _
+        TextBox4.Value = "" Or _
+        TextBox5.Value = "" Or _
+        TextBox6.Value = "" Or _
+        TextBox7.Value = "" Or _
+        ComboBox1.Value = "" Or _
+        ScrollBar1.Value > 1 And ComboBox2.Value = "" Or _
+        OptionButton1.Value = False And OptionButton2.Value = False Or _
+        ScrollBar2.Value > 1 And ComboBox3.Value = "" Or _
+        OptionButton3.Value = False And OptionButton4.Value = False And OptionButton5.Value = False Or _
+        CheckBox1.Value = False And CheckBox2.Value = False And CheckBox3.Value = False And CheckBox4.Value = False And CheckBox5.Value = False And CheckBox6.Value = False And CheckBox7.Value = False And CheckBox8.Value = False And CheckBox9.Value = False And CheckBox10.Value = False And CheckBox11.Value = False And CheckBox12.Value = False And CheckBox13.Value = False And CheckBox14.Value = False Then
+    MsgBox ("Zadejte všechny údaje!")
+    GoTo konec
+    End If
+    
+    i = 1
+    Do While ast.Range("A" & i).Value <> ""
+        i = i + 1
+    Loop
+    
+    For bbbbb = 1 To i - 1
+        If TextBox1.Value = Cells(bbbbb, 2) And TextBox2.Value = Cells(bbbbb, 3) Then
+                    ast.Range("A" & i).Value = ""
+                    ast.Range("B" & i).Value = ""
+                    ast.Range("C" & i).Value = ""
+                    ast.Range("D" & i).Value = ""
+                    ast.Range("E" & i).Value = ""
+                    ast.Range("F" & i).Value = ""
+                    ast.Range("G" & i).Value = ""
+                    ast.Range("H" & i).Value = ""
+                    ast.Range("I" & i).Value = ""
+                    ast.Range("J" & i).Value = ""
+                    ast.Range("K" & i).Value = ""
+                    ast.Range("L" & i).Value = ""
+                    ast.Range("M" & i).Value = ""
+                    ast.Range("N" & i).Value = ""
+                    ast.Range("O" & i).Value = ""
+                    ast.Range("P" & i).Value = ""
+                    ast.Range("Q" & i).Value = ""
+                    ast.Range("R" & i).Value = ""
+                    ast.Range("S" & i).Value = ""
+                    ast.Range("T" & i).Value = ""
+                    ast.Range("U" & i).Value = ""
+                    ast.Range("V" & i).Value = ""
+                    MsgBox ("Tento záznam již existuje!")
+                    GoTo konec
+                    
+                    ElseIf TextBox1.Value <> Cells(bbbbb, 2) And TextBox2.Value <> Cells(bbbbb, 3) Then
+                    
+                        xx = 1
+                        For b = 26 To i - 1
+                            xx = Format(xx, "00")
+                            ast.Range("A" & i).Value = Format(Now, "yyyymmdd" & xx)
+                            If Left(ast.Range("A" & i), 8) = Left(ast.Range("A" & i - 1), 8) Then
+                                ast.Range("A" & i).Value = Left(ast.Range("A" & i), 8) & Format(Right(ast.Range("A" & i - 1), 2) + 1, "00")
+                                ast.Range("A" & i).Value = Format(ast.Range("A" & i), "########" & "00")
+                            End If
+                        Next b
+                        
+                        ast.Range("B" & i).Value = TextBox1.Value
+                        ast.Range("C" & i).Value = TextBox2.Value
+                        ast.Range("D" & i).Value = TextBox3.Value
+                        
+                        If ComboBox1.Value = "Pan" Then
+                            ast.Range("E" & i).Value = "muž"
+                        ElseIf ComboBox1.Value = "Paní" Then
+                            ast.Range("E" & i).Value = "žena"
+                        End If
+                        
+                        If ScrollBar1.Value = 1 Then
+                            ast.Range("F" & i).Value = "základní"
+                        ElseIf ScrollBar1.Value = 2 Then
+                            ast.Range("F" & i).Value = "střední"
+                        ElseIf ScrollBar1.Value = 3 Then
+                            ast.Range("F" & i).Value = "vyšší"
+                        ElseIf ScrollBar1.Value = 4 Then
+                            ast.Range("F" & i).Value = "vysoké"
+                        End If
+                        
+                        If ScrollBar1.Value = 1 Then
+                            ast.Range("G" & i).Value = ""
+                        Else
+                            ast.Range("G" & i).Value = ComboBox2.Value
+                        End If
+                        
+                        If ToggleButton1.Value = True Then
+                            ast.Range("H" & i).Value = "ano"
+                        Else
+                            ast.Range("H" & i).Value = "ne"
+                        End If
+                        
+                        ast.Range("I" & i).Value = LCase(TextBox4.Value)
+                        
+                        ast.Range("J" & i).Value = Split(TextBox5.Value, ",")
+                        
+                        ast.Range("K" & i).Value = TextBox5.Value
+                        
+                        For lll = 1 To Len(TextBox5.Value)
+                            c = Mid(TextBox5.Value, lll, 6)
+                                If c Like "### ##" Then
+                                    ast.Range("L" & i).Value = Trim(c)
+                                End If
+                        Next lll
+                        
+                        cccc = Format(Mid(ast.Range("K" & i).Value, 6), "### ##")
+                        ast.Range("K" & i).Value = Replace(ast.Range("K" & i).Value, ast.Range("J" & i).Value, "")
+                        ast.Range("K" & i).Value = Replace(ast.Range("K" & i).Value, ast.Range("L" & i).Value, "")
+                        ast.Range("K" & i).Value = Replace(ast.Range("K" & i).Value, ",", "")
+                        ast.Range("K" & i).Value = Trim(ast.Range("K" & i).Value)
+                        
+                        
+                        mmm = TextBox6.text
+                        sp = Split(mmm, ",")
+                        For iii = LBound(sp) To UBound(sp)
+                            Cells(i, 13 + iii) = sp(iii)
+                        Next iii
+                        If iii > 3 Then
+                            ast.Range("A" & i).Value = ""
+                            ast.Range("B" & i).Value = ""
+                            ast.Range("C" & i).Value = ""
+                            ast.Range("D" & i).Value = ""
+                            ast.Range("E" & i).Value = ""
+                            ast.Range("F" & i).Value = ""
+                            ast.Range("G" & i).Value = ""
+                            ast.Range("H" & i).Value = ""
+                            ast.Range("I" & i).Value = ""
+                            ast.Range("J" & i).Value = ""
+                            ast.Range("K" & i).Value = ""
+                            ast.Range("L" & i).Value = ""
+                            ast.Range("M" & i).Value = ""
+                            ast.Range("N" & i).Value = ""
+                            ast.Range("O" & i).Value = ""
+                            ast.Range("P" & i).Value = ""
+                            ast.Range("Q" & i).Value = ""
+                            ast.Range("R" & i).Value = ""
+                            ast.Range("S" & i).Value = ""
+                            ast.Range("T" & i).Value = ""
+                            ast.Range("U" & i).Value = ""
+                            ast.Range("V" & i).Value = ""
+                            MsgBox ("Zadali jste příliš mnoho kontaktů!")
+                            GoTo konec
+                        End If
+                        
+                        ast.Range("N" & i).Value = Format(ast.Range("N" & i), "### ### ###")
+                        ast.Range("O" & i).Value = Format(ast.Range("O" & i), "### ### ###")
+                        
+                        If OptionButton3.Value = True Then
+                            ast.Range("P" & i).Value = OptionButton3.Caption
+                        ElseIf OptionButton4.Value = True Then
+                            ast.Range("P" & i).Value = OptionButton4.Caption
+                        ElseIf OptionButton5.Value = True Then
+                            ast.Range("P" & i).Value = OptionButton5.Caption
+                        End If
+                        
+                        If OptionButton1.Value = True Then
+                            ast.Range("Q" & i).Value = "muž"
+                        ElseIf OptionButton2.Value = True Then
+                            ast.Range("Q" & i).Value = "žena"
+                        End If
+                        
+                        If ScrollBar2.Value = 1 Then
+                            ast.Range("R" & i).Value = "základní"
+                        ElseIf ScrollBar2.Value = 2 Then
+                            ast.Range("R" & i).Value = "střední"
+                        ElseIf ScrollBar2.Value = 3 Then
+                            ast.Range("R" & i).Value = "vyšší"
+                        ElseIf ScrollBar2.Value = 4 Then
+                            ast.Range("R" & i).Value = "vysoké"
+                        End If
+                        
+                        If ScrollBar2.Value = 1 Then
+                            ast.Range("S" & i).Value = ""
+                        Else
+                            ast.Range("S" & i).Value = ComboBox3.Value
+                        End If
+                        
+                        ast.Range("T" & i).Value = LCase(TextBox7.Value)
+                        
+                        Dim chk As Control
+                        Dim kraje As String, delimiter As String
+                    
+                        For Each chk In Me.Frame1.Controls
+                            If TypeOf chk Is MSForms.CheckBox Then
+                                If Not TypeOf chk Is MSForms.OptionButton Then
+                                    If (chk.Value) Then
+                                        kraje = kraje & delimiter & chk.Caption
+                                        delimiter = ", "
+                                    End If
+                                End If
+                            End If
+                        Next
+                        
+                        ast.Range("U" & i).Value = kraje
+                             
+                        ast.Range("V" & i).Value = Format(Now, "d. m. yyyy")
+            
+        End If
+    Next bbbbb
+konec:
+
+
+End Sub
+
+
+Private Sub CommandButton2_Click()
+   
+End Sub
+
+
+Private Sub CommandButton4_Click()
+    Dim ast As Worksheet, i As Byte
+    Set ast = Worksheets("Očištěná_data")
+    
+    i = 1
+    Do While ast.Range("A" & i).Value <> ""
+        i = i + 1
+    Loop
+    
+    For bbbbb = 2 To i - 1
+    
+        y1 = Format(Now, "yyyy")
+        vek1 = y1 - Cells(bbbbb, 4)
+        vek2 = y1 - TextBox3.Value
+        
+        x1 = Abs(vek1 - vek2) * (-2)
+        
+        If Cells(bbbbb, 6) = "základní" Then
+            vzd1 = 1
+        ElseIf Cells(bbbbb, 6) = "střední" Then
+            vzd1 = 2
+        ElseIf Cells(bbbbb, 6) = "vyšší" Then
+            vzd1 = 3
+        ElseIf Cells(bbbbb, 6) = "vysoké" Then
+            vzd1 = 4
+        End If
+        
+        x2 = Abs(vzd1 - ScrollBar2.Value) * (-4)
+        
+        hlvzd = Cells(bbbbb, 7)
+        
+        If hlvzd = ComboBox3.Value Then
+            x3 = 20
+        Else
+            x3 = 0
+        End If
+        
+        x4 = 0
+        hldzajm = TextBox7.text
+        zajm = Cells(bbbbb, 9)
+        sp = Split(hldzajm, ", ")
+        sn = Split(zajm, ", ")
+        For iii = LBound(sp) To UBound(sp)
+            mm = sp(iii)
+        Next iii
+        
+        For aaa = LBound(sn) To UBound(sn)
+            mmm = sn(aaa)
+        Next aaa
+        
+        If mm = mmm Then
+            For ap = LBound(sp) To UBound(sn)
+                x4 = x4 + 5
+            Next ap
+        End If
+        
+        skore = ((10 * x1) + (5 * x2) + (3.3 * x3) + (2.5 * x4)) / 100
+         
+        shoda = Format(skore, "0.00%")
+        MsgBox shoda
+    Next bbbbb
+    
+End Sub
+
+Private Sub CommandButton5_Click()
+    
+    myrow = UserForm2.ListBox1.List(UserForm2.ListBox1.ListIndex, 4)
+
+    test = MsgBox("Určitě smazat člena?", vbYesNo)
+    
+    If test = vbYes Then
+    
+        Cells(myrow, "C").EntireRow.Delete
+        
+        UserForm1.TextBox1.text = ""
+        UserForm1.TextBox2.text = ""
+        UserForm1.TextBox3.text = ""
+        UserForm1.TextBox4.text = ""
+        UserForm1.TextBox5.text = ""
+        UserForm1.TextBox6.text = ""
+        UserForm1.TextBox7.text = ""
+        
+    ElseIf test = vbNo Then
+        GoTo konec
+    End If
+    
+konec:
+End Sub
+
+
+
+Private Sub Label11_Click()
+
+End Sub
+
+Private Sub Label12_Click()
+
+End Sub
+
+Private Sub Label14_Click()
+
+End Sub
+
+Private Sub ScrollBar2_Change()
+
+If ScrollBar2.Value = 1 Then
+        Label12.Caption = "základní"
+    ElseIf ScrollBar2.Value = 2 Then
+        Label12.Caption = "střední"
+    ElseIf ScrollBar2.Value = 3 Then
+        Label12.Caption = "vyšší"
+    Else
+        Label12.Caption = "vysoké"
+    End If
+    
+    If ScrollBar2.Value > 1 Then
+        ComboBox3.Enabled = True
+    Else
+        ComboBox3.Enabled = False
+    End If
+
+End Sub
+
+Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
+
+        If CloseMode = 0 Then Cancel = True
+
+End Sub
+
+Private Sub ComboBox1_Change()
+    
+    If ComboBox1 = "Pan" Then
+        Image1.Visible = False
+        Image2.Visible = True
+        UserForm1.BackColor = RGB(0, 255, 255)
+        OptionButton3.Caption = "zadaný"
+        OptionButton4.Caption = "volný"
+        OptionButton5.Caption = "skrytý"
+            If ToggleButton1 = False Then
+                ToggleButton1.Caption = "nezaměstnán"
+                ToggleButton1.BackColor = RGB(255, 0, 0)
+            ElseIf ToggleButton1 = True Then
+                ToggleButton1.Caption = "zaměstnán"
+                ToggleButton1.BackColor = RGB(0, 255, 0)
+            End If
+    Else
+        Image1.Visible = True
+        Image2.Visible = False
+        UserForm1.BackColor = RGB(255, 192, 203)
+        OptionButton3.Caption = "zadaná"
+        OptionButton4.Caption = "volná"
+        OptionButton5.Caption = "skrytá"
+            If ToggleButton1 = False Then
+                ToggleButton1.Caption = "nezaměstnaná"
+                ToggleButton1.BackColor = RGB(255, 0, 0)
+            ElseIf ToggleButton1 = True Then
+                ToggleButton1.Caption = "zaměstnaná"
+                ToggleButton1.BackColor = RGB(0, 255, 0)
+            End If
+    End If
+        
+
+End Sub
+
+
+Private Sub CommandButton3_Click()
+
+    Unload UserForm1
+
+End Sub
+
+Private Sub ScrollBar1_Change()
+
+    If ScrollBar1.Value = 1 Then
+        Label11.Caption = "základní"
+    ElseIf ScrollBar1.Value = 2 Then
+        Label11.Caption = "střední"
+    ElseIf ScrollBar1.Value = 3 Then
+        Label11.Caption = "vyšší"
+    Else
+        Label11.Caption = "vysoké"
+    End If
+    
+    If ScrollBar1.Value > 1 Then
+        ComboBox2.Enabled = True
+    Else
+        ComboBox2.Enabled = False
+    End If
+    
+End Sub
+
+Private Sub ToggleButton1_Click()
+
+    If ToggleButton1 = False Then
+        If ComboBox1 = "Pan" Then
+            ToggleButton1.Caption = "nezaměstnán"
+            ToggleButton1.BackColor = RGB(255, 0, 0)
+        ElseIf ComboBox1 = "Paní" Then
+            ToggleButton1.Caption = "nezaměstnaná"
+            ToggleButton1.BackColor = RGB(255, 0, 0)
+        End If
+    ElseIf ToggleButton1 = True Then
+        If ComboBox1 = "Pan" Then
+            ToggleButton1.Caption = "zaměstnán"
+            ToggleButton1.BackColor = RGB(0, 255, 0)
+        ElseIf ComboBox1 = "Paní" Then
+            ToggleButton1.Caption = "zaměstnaná"
+            ToggleButton1.BackColor = RGB(0, 255, 0)
+        End If
+    End If
+    
+End Sub
+
+Private Sub UserForm_initialize()
+
+    ComboBox1.List = Array("Pan", "Paní")
+    ComboBox1 = "Pan"
+    ToggleButton1.Caption = "nezaměstnán"
+    Image1.Visible = False
+    Image2.Visible = True
+    
+    ToggleButton1.BackColor = RGB(255, 0, 0)
+    
+    
+    Label13.Caption = "Je členem méně než 1 rok"
+    
+    
+    
+End Sub

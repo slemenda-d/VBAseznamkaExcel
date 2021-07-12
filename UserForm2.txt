@@ -1,0 +1,161 @@
+
+Private Sub ComboBox1_Change()
+Dim ast As Worksheet, i As Byte
+Set ast = Worksheets("Pomoc")
+Dim mst As Worksheet
+Set mst = Worksheets("Očištěná_data")
+
+    Me.ListBox1.Clear
+    
+    i = 1
+    Do While ast.Range("F" & i).Value <> ""
+        i = i + 1
+    Loop
+    
+    ii = 1
+    Do While mst.Range("A" & ii).Value <> ""
+        ii = ii + 1
+    Loop
+    
+    y1 = Format(Now, "yyyy")
+    
+        For a = 1 To ii
+            For c = 1 To i
+                If ast.Cells(c, "E").Value = Me.ComboBox1.Value And mst.Cells(a, "L").Value Like ast.Cells(c, "F").Value Then
+                    Me.ListBox1.AddItem mst.Cells(a, "B") & " " & mst.Cells(a, "C")
+                    Me.ListBox1.List(Me.ListBox1.ListCount - 1, 1) = y1 - mst.Cells(a, "D") & " let"
+                    Me.ListBox1.List(Me.ListBox1.ListCount - 1, 2) = mst.Cells(a, "P")
+                    If mst.Cells(a, "N") = "" Then
+                        Me.ListBox1.List(Me.ListBox1.ListCount - 1, 3) = "neuvedeno"
+                    Else
+                        Me.ListBox1.List(Me.ListBox1.ListCount - 1, 3) = "tel. " & Format(mst.Cells(a, "N"), "### ### ###")
+                    End If
+                    Me.ListBox1.List(Me.ListBox1.ListCount - 1, 4) = a
+                End If
+            Next c
+        Next a
+   
+End Sub
+
+Private Sub CommandButton1_Click()
+    Unload UserForm2
+End Sub
+
+
+Private Sub CommandButton2_Click()
+
+Dim mst As Worksheet
+Set mst = Worksheets("Očištěná_data")
+
+     myrow = Me.ListBox1.List(Me.ListBox1.ListIndex, 4)
+     
+     UserForm1.CommandButton5.Visible = True
+     
+     UserForm1.Caption = "Člen " & mst.Cells(myrow, "A").Value
+     UserForm1.TextBox1.text = mst.Cells(myrow, "B").Value
+     UserForm1.TextBox2.text = mst.Cells(myrow, "C").Value
+     UserForm1.TextBox3.text = mst.Cells(myrow, "D").Value
+     
+     UserForm1.ComboBox1.Visible = False
+     UserForm1.ComboBox1.Enabled = False
+     UserForm1.Label14.Visible = True
+     
+     If Cells(myrow, "E") = "muž" Then
+        UserForm1.Label14.Caption = "Pan"
+     ElseIf Cells(myrow, "E") = "žena" Then
+        UserForm1.Label14.Caption = "Paní"
+        UserForm1.ComboBox1 = "Paní"
+     End If
+     
+     
+     If Cells(myrow, "F") = "základní" Then
+        UserForm1.ScrollBar1.Value = 1
+     ElseIf Cells(myrow, "F") = "střední" Then
+        UserForm1.ScrollBar1.Value = 2
+     ElseIf Cells(myrow, "F") = "vyšší" Then
+        UserForm1.ScrollBar1.Value = 3
+     ElseIf Cells(myrow, "F") = "vysoké" Then
+        UserForm1.ScrollBar1.Value = 4
+     End If
+     
+     UserForm1.ComboBox2 = Cells(myrow, "G")
+     
+     If Cells(myrow, "H") = "ano" Then
+        UserForm1.ToggleButton1.Value = True
+     ElseIf Cells(myrow, "H") = "ne" Then
+        UserForm1.ToggleButton1.Value = False
+     End If
+     
+     UserForm1.TextBox4.text = Cells(myrow, "I")
+     UserForm1.TextBox5.text = Cells(myrow, "J") & ", " & Cells(myrow, "L") & " " & Cells(myrow, "K")
+     
+     UserForm1.TextBox6.text = Cells(myrow, "M") & ", " & Cells(myrow, "N") & ", " & Cells(myrow, "O")
+     
+     If Cells(myrow, "P") = "zadaný" Or Cells(myrow, "P") = "zadaná" Then
+        UserForm1.OptionButton3.Value = True
+     ElseIf Cells(myrow, "P") = "volný" Or Cells(myrow, "P") = "volná" Then
+        UserForm1.OptionButton4.Value = True
+     ElseIf Cells(myrow, "P") = "skrytý" Or Cells(myrow, "P") = "skrytá" Then
+        UserForm1.OptionButton5.Value = True
+     End If
+     
+     If Cells(myrow, "Q") = "muž" Then
+        UserForm1.OptionButton1.Value = True
+     ElseIf Cells(myrow, "Q") = "žena" Then
+        UserForm1.OptionButton2.Value = True
+     End If
+     
+     If Cells(myrow, "R") = "základní" Then
+        UserForm1.ScrollBar2.Value = 1
+     ElseIf Cells(myrow, "R") = "střední" Then
+        UserForm1.ScrollBar2.Value = 2
+     ElseIf Cells(myrow, "R") = "vyšší" Then
+        UserForm1.ScrollBar2.Value = 3
+     ElseIf Cells(myrow, "R") = "vysoké" Then
+        UserForm1.ScrollBar2.Value = 4
+     End If
+     
+     UserForm1.ComboBox3 = Cells(myrow, "S")
+     UserForm1.TextBox7.text = Cells(myrow, "T")
+     
+    
+    UserForm1.Show
+     
+     
+     
+End Sub
+
+Private Sub ListBox1_Change()
+    If ListBox1.ListIndex > -1 Then
+        CommandButton2.Enabled = True
+        CommandButton3.Enabled = True
+    Else
+        CommandButton2.Enabled = False
+        CommandButton3.Enabled = False
+    End If
+End Sub
+
+Private Sub UserForm_initialize()
+
+    CommandButton2.Enabled = False
+    CommandButton3.Enabled = False
+    
+End Sub
+
+Private Sub CommandButton3_Click()
+
+    myrow = Me.ListBox1.List(Me.ListBox1.ListIndex, 4)
+
+    test = MsgBox("Určitě chcete člena vymazat?", vbYesNo)
+    
+    If test = vbYes Then
+        Cells(myrow, "C").EntireRow.Delete
+    ElseIf test = vbNo Then
+        GoTo konec
+    End If
+konec:
+End Sub
+
+Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
+        If CloseMode = 0 Then Cancel = True
+End Sub

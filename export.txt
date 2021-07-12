@@ -1,0 +1,26 @@
+Private Sub CommandButton4_Click()
+
+    Dim soubor As Variant
+    Dim oddelovac As String
+    oddelovac = ";"
+    soubor = Application.GetSaveAsFilename( _
+             FileFilter:="Textové soubory (*.txt), *.txt", _
+             Title:="Vyberte adresář pro uložení")
+    If soubor = False Then
+        MsgBox "Nebyla vybráno žádné místo na uložení", vbCritical
+    Else
+        Dim fso As New FileSystemObject
+        Dim fil As File
+        Dim ts As TextStream
+        fso.CreateTextFile soubor
+        Set fil = fso.GetFile(soubor)
+        Set ts = fil.OpenAsTextStream(ForWriting)
+        
+        
+            For rd = 1 To ThisWorkbook.Worksheets("Očištěná_data").Range("A1").CurrentRegion.Rows.Count
+                ts.WriteLine Cells(rd, 1) & oddelovac & Cells(rd, 2) & oddelovac & Cells(rd, 3) & oddelovac & Cells(rd, 4) & oddelovac & Cells(rd, 5) & oddelovac & Cells(rd, 6) & oddelovac & Cells(rd, 7) & oddelovac & Cells(rd, 8) & oddelovac & Cells(rd, 9) & oddelovac & Cells(rd, 10) & oddelovac & Cells(rd, 11) & oddelovac & Cells(rd, 12) & oddelovac & Cells(rd, 13) & oddelovac & Cells(rd, 14) & oddelovac & Cells(rd, 15) & oddelovac & Cells(rd, 16) & oddelovac & Cells(rd, 17) & oddelovac & Cells(rd, 18) & oddelovac & Cells(rd, 19) & oddelovac & Cells(rd, 20) & oddelovac & Cells(rd, 21) & oddelovac & Cells(rd, 22)
+            Next rd
+        
+        ts.Close
+        End If
+End Sub

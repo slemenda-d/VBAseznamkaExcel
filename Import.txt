@@ -1,0 +1,42 @@
+Private Sub CommandButton5_Click()
+
+    Dim souborImp As Variant
+    Dim filefilterpattern As String
+    Dim wsMaster As Worksheet
+    Dim wbImp As Workbook
+    Dim LastRowPut As Integer
+    
+    Application.ScreenUpdating = False
+    
+    filefilterpattern = "Textove soubory (*.txt; *.csv;), *.txt; *.csv"
+    
+    souborImp = Application.GetOpenFilename(filefilterpattern)
+                         
+    
+    If souborImp = False Then
+    
+        MsgBox "Soubor nevybran"
+    
+    Else
+        
+        Workbooks.OpenText _
+                Filename:=souborImp, _
+                StartRow:=1, _
+                DataType:=xlDelimited, _
+                Other:=True, _
+                OtherChar:=";"
+    
+        Set wbImp = ActiveWorkbook
+        Set wsMaster = ThisWorkbook.Worksheets("Očištěná_data")
+        
+        LastRowPut = wsMaster.Range("A1").CurrentRegion.Rows.Count
+        
+        wbImp.Worksheets(1).Range("A1").CurrentRegion.Copy wsMaster.Range("A" & LastRowPut)
+        
+        wbImp.Close False
+    
+    End If
+    
+    Application.ScreenUpdating = True
+    
+End Sub

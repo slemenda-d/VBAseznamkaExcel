@@ -1,0 +1,244 @@
+Private Sub CommandButton1_Click()
+
+Dim i As Integer, m() As String, vstup As String, vystup As String, pocet As Integer, cislo As Integer, zacatek As String, n() As String, a As Integer, konec As String
+
+    pocet = 1
+    Do While Worksheets("Zdroj").Range("A" & pocet).Value <> ""
+    
+        vstup = Worksheets("Zdroj").Range("A" & pocet).Value
+        m = Split(vstup, ";")
+    
+            For i = LBound(m) To UBound(m)
+            
+                vystup = m(i)
+                Worksheets("Očištěná_data").Cells(pocet, i + 1).Value = Trim(vystup)
+                
+            Next i
+    
+         pocet = pocet + 1
+    Loop
+    
+    Range("K:M").EntireColumn.Insert
+    
+    cislo = 2
+    Do While Worksheets("Očištěná_Data").Range("J" & cislo).Value <> ""
+        
+        zacatek = Worksheets("Očištěná_data").Range("J" & cislo).Value
+        n = Split(zacatek, ",")
+    
+            For a = LBound(n) To UBound(n)
+            
+                konec = n(a)
+                Worksheets("Očištěná_data").Cells(cislo, a + 11).Value = Trim(konec)
+                
+            Next a
+        cislo = cislo + 1
+    Loop
+    
+    Range("J1").EntireColumn.Delete
+    Range("J1").Value = "Ulice"
+    
+    radek = 2
+    Do While Worksheets("Očištěná_data").Range("K" & radek).Value <> ""
+    
+        vstupa = Worksheets("Očištěná_data").Range("K" & radek).Value
+            
+            For b = 1 To Len(vstupa)
+                c = Mid(vstupa, b, 6)
+                
+                    If c Like "### ##" Then
+                        Worksheets("Očištěná_data").Cells(radek, 12).Value = Trim(c)
+                    End If
+            Next b
+        radek = radek + 1
+    Loop
+    
+    radekk = 2
+    Do While Worksheets("Očištěná_data").Range("K" & radekk).Value <> ""
+    
+        vstupaa = Worksheets("Očištěná_data").Range("K" & radekk).Value
+            For bb = 1 To Len(vstupaa)
+                cc = Mid(vstupaa, bb, 6)
+                
+                    If cc Like "### ##" Then
+                        Worksheets("Očištěná_data").Cells(radekk, 11).Value = Replace(vstupaa, cc, "")
+                    End If
+            Next bb
+        radekk = radekk + 1
+    Loop
+    
+    Worksheets("Očištěná_data").Range("K1").Value = "Město"
+    Worksheets("Očištěná_data").Range("L1").Value = "PSČ"
+    
+    radeke = 2
+    For e = 2 To 26
+    vstupe = Range("E" & radeke).Value
+        If vstupe = "M" Then
+           Range("E" & radeke).Value = "muž"
+        ElseIf vstupe = "Ž" Then
+            Range("E" & radeke).Value = "žena"
+        ElseIf vstupe = "" Then
+            If Range("C" & radeke).Value Like "*á" Then
+                Range("E" & radeke).Value = "žena"
+            Else: Range("E" & radeke).Value = "muž"
+            End If
+        End If
+        Range("E" & radeke).Value = LCase(Range("E" & radeke))
+        radeke = radeke + 1
+    Next e
+    
+    radekf = 2
+    For F = 2 To 26
+    vstupf = Range("F" & radekf).Value
+        If vstupf = "1" Then
+            Range("F" & radekf).Value = "základní"
+            ElseIf vstupf = "2" Then
+                Range("F" & radekf).Value = "střední"
+            ElseIf vstupf = "3" Then
+                Range("F" & radekf).Value = "vyšší"
+            ElseIf vstupf = "4" Then
+                Range("F" & radekf).Value = "vysoké"
+        End If
+        Range("F" & radekf).Value = Trim(Excel.WorksheetFunction.Substitute(Excel.WorksheetFunction.Clean(Range("F" & radekf)), " ", ""))
+        Range("F" & radekf).Value = LCase(Range("F" & radekf))
+        radekf = radekf + 1
+    Next F
+    
+    radekg = 2
+    For g = 2 To 26
+        Range("G" & radekg).Value = Application.WorksheetFunction.Proper(Range("G" & radekg))
+        radekg = radekg + 1
+    Next g
+    
+    radekh = 2
+    For h = 2 To 26
+        vstuph = Range("H" & radekh).Value
+            If vstuph = "1" Then
+                Range("H" & radekh).Value = "ano"
+            ElseIf vstuph = "0" Then
+                Range("H" & radekh).Value = "ne"
+            ElseIf vstuph = "a" Then
+                Range("H" & radekh).Value = "ano"
+            ElseIf vstuph = "n" Then
+                Range("H" & radekh).Value = "ne"
+            End If
+        radekh = radekh + 1
+    Next h
+    
+    radekkk = 2
+    For k = 2 To 26
+        Range("K" & radekkk).Value = Trim(Range("K" & radekkk))
+        radekkk = radekkk + 1
+    Next k
+    
+    radeknn = 2
+    For nn = 2 To 26
+        Range("N" & radeknn).NumberFormat = "### ### ###"
+        radeknn = radeknn + 1
+    Next nn
+    
+    radekoo = 2
+    For oo = 2 To 26
+        Range("O" & radekoo).NumberFormat = "### ### ###"
+        radekoo = radekoo + 1
+    Next oo
+    
+    radekp = 2
+    For p = 2 To 26
+        If Range("P" & radekp) = "" Then
+            If Range("E" & radekp) = "muž" Then
+                Range("P" & radekp) = "volný"
+            Else: Range("P" & radekp) = "volná"
+            End If
+        ElseIf Range("E" & radekp) = "muž" Then
+            Range("P" & radekp).Value = Replace(Range("P" & radekp), "á", "ý")
+            Else: Range("P" & radekp).Value = Replace(Range("P" & radekp), "ý", "á")
+        End If
+    radekp = radekp + 1
+    Next p
+    
+    radekq = 2
+    For q = 2 To 26
+    vstupq = Range("Q" & radekq).Value
+        If vstupq = "M" Or vstupq = "m" Then
+           Range("Q" & radekq).Value = "muž"
+        ElseIf vstupq = "Ž" Or vstupq = "ž" Then
+            Range("Q" & radekq).Value = "žena"
+        
+        End If
+        Range("Q" & radekq).Value = LCase(Range("Q" & radekq))
+        radekq = radekq + 1
+    Next q
+    
+    radekr = 2
+    For r = 2 To 26
+    vstupr = Range("R" & radekr).Value
+        If vstupr = "1" Then
+            Range("R" & radekr).Value = "základní"
+            ElseIf vstupr = "2" Then
+                Range("R" & radekr).Value = "střední"
+            ElseIf vstupr = "3" Then
+                Range("R" & radekr).Value = "vyšší"
+            ElseIf vstupr = "4" Then
+                Range("R" & radekr).Value = "vysoké"
+        End If
+        Range("R" & radekr).Value = Trim(Excel.WorksheetFunction.Substitute(Excel.WorksheetFunction.Clean(Range("R" & radekr)), " ", ""))
+        Range("R" & radekr).Value = LCase(Range("R" & radekr))
+        radekr = radekr + 1
+    Next r
+    
+    radeks = 2
+    For S = 2 To 26
+        Range("S" & radeks).Value = Application.WorksheetFunction.Proper(Range("S" & radeks))
+        radeks = radeks + 1
+    Next S
+    
+    radeku = 2
+    For u = 2 To 26
+        Range("U" & radeku).Value = Application.WorksheetFunction.Proper(Range("U" & radeku))
+        Range("U" & radeku).Value = Trim(Replace(Range("U" & radeku), "Kraj", ""))
+        Range("U" & radeku).Value = Excel.WorksheetFunction.Substitute(Excel.WorksheetFunction.Clean(Range("U" & radeku)), " ", "")
+        Range("U" & radeku).Value = Replace(Range("U" & radeku), ",", ", ")
+        radeku = radeku + 1
+    Next u
+    
+    radekv = 2
+    For V = 2 To 26
+        If Range("V" & radekv).Value = "" Then
+            Range("V" & radekv).Value = Left(Range("A" & radekv), 8)
+            Range("V" & radekv) = Format(Range("V" & radekv), "#### ## ##")
+        End If
+        Range("V" & radekv) = Format(Range("V" & radekv), "d. m. yyyy")
+        radekv = radekv + 1
+    Next V
+    
+    With Me.Cells
+        .Columns.AutoFit
+    End With
+    
+    Rows("2:2").Select
+    ActiveWindow.FreezePanes = True
+    
+    Range("A1:V26").SpecialCells(xlCellTypeBlanks).Interior.ColorIndex = 3
+    
+    For ggg = 2 To 26
+        If Range("F" & ggg) = "základní" Then
+            Range("G" & ggg).Interior.Color = xlNone
+        End If
+    Next ggg
+    
+    For ooo = 2 To 26
+        Range("O" & ooo).Interior.Color = xlNone
+    Next ooo
+    
+    For sss = 2 To 26
+        If Range("R" & sss) = "základní" Then
+            Range("S" & sss).Interior.Color = xlNone
+        End If
+    Next sss
+    
+    Range("A1:V26").SpecialCells(xlCellTypeConstants).Interior.Color = xlNone
+    
+    Worksheets("Očištěná_data").Range("W1:X26").Clear
+    
+End Sub
